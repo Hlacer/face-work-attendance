@@ -1,0 +1,17 @@
+<view class="info-container">
+    <view wx:if="{{isFace}}">图像采集中，请稍后...{{count}}s</view>
+</view>
+<camera class="camera" mode="normal" resolution="high" device-position="front" flash="off" binderror="error" frame-size="large">
+    <cover-image class="camera-radious" src="../../static/img/0.png"></cover-image>
+</camera>
+
+
+<button wx:if="{{isCollect}}" type="primary" bindtap="collectFace">开始采集</button>
+<button wx:if="{{isAd}}" type="primary" bindtap="adFace">开始考勤</button>
+<button wx:if="{{isOut}}" type="primary" bindtap="adOut">开始签退</button>
+<text>{{message}}</text>
+<!-- <view class="info-container">
+    <button type="primary" bindtap="takePhoto">拍照</button>
+    <view>预览</view>
+    <image mode="widthFix" src="{{src}}"></image>
+</view> -->

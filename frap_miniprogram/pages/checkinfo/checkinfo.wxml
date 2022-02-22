@@ -1,0 +1,16 @@
+<!--pages/guid/guid.wxml-->
+<form catchsubmit="formSubmit">
+    <view class="form_container">
+        <text class="user">工号：</text>
+        <input class="input" name="user_id" placeholder="请输入您的工号" />
+    </view>
+    <view class="form_container">
+        <text class="user">姓名：</text>
+        <input class="input" name="user_name" placeholder="请输入您的姓名" />
+    </view>
+    <view class="form_container">
+        <text class="user">部门：</text>
+        <input class="input" name="user_dept" placeholder="请输入您的部门" />
+    </view>
+    <button type="primary" class="btn" form-type="submit">验证</button>
+</form>

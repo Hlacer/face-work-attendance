@@ -1,0 +1,14 @@
+.camera {
+    width: 400rpx;
+    height: 400rpx;
+    margin: 40rpx auto;
+}
+
+.camera-radious {
+    width: 400rpx;
+    height: 400rpx;
+}
+
+.info-container {
+    text-align: center;
+}

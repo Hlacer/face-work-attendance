@@ -1,0 +1,9 @@
+/* pages/auth/auth.wxss */
+.warn_text{
+    width: 100%;
+    text-align: center;
+    margin-top: 20rpx;
+}
+.auth_btn{
+    margin-top: 30rpx;
+}

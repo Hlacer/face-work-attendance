@@ -1,0 +1,33 @@
+.data-picker{
+    width: 100%;
+    text-align: center;
+    margin-top: 10px;
+}
+.manager-count{
+    float:right;
+    width:25%;
+    height:60px;
+    padding-left: 20px;
+}
+.manager-count .tip{
+    font-size: 16px;
+}
+.manager-count .number{
+    font-size: 20px;
+}
+.nav-menu{
+    height: 50px;
+    width: 100%;
+}
+.left{
+    font-size: 24px;
+}
+.right{
+    line-height: 50px;
+    float: right;
+}
+.form-item{
+    float: left;
+    margin-right: 15px!important;
+    line-height: 50px!important;
+}

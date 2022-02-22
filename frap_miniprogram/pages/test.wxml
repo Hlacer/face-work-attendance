@@ -1,0 +1,4 @@
+<!--pages/test.wxml-->
+<camera style="width: 200px;height: 200px;" mode="normal" resolution="high" device-position="front" flash="off" binderror="error" frame-size="large">
+</camera>
+<button bindtap="getCamera">获取实时帧</button>

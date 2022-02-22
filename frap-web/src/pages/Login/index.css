@@ -1,0 +1,21 @@
+body{
+    background-image: linear-gradient(to bottom right,#f80002, #e8ff06);
+}
+.login-logo{
+    float: left;
+    height: 31px;
+    margin: 16px 24px 10px -27px;
+    text-align: center;
+    line-height: 31px;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    font-family: "微软雅黑";
+    color: white;
+}
+.login-card{
+    width: 30%;
+    margin: 20px auto auto;
+    box-shadow:0 0 5px #DEDEDE;
+    text-align: center;
+}

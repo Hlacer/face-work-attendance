@@ -1,0 +1,3 @@
+<!--pages/auth/auth.wxml-->
+<view class="warn_text">您未开启“{{auth_type}}”权限，请授权后继续使用</view>
+<button class="auth_btn" type="primary" bindtap="auth">点我授权</button>

@@ -1,0 +1,31 @@
+<map name="my_map" class="map" show-location="true" latitude="{{latitude}}" longitude="{{longitude}}"></map>
+
+<!-- <view class="button_container" bindtap="choseFun">
+    <view class="success">{{isFirst?"首次使用":adSuccess?"考勤成功"+adTime:"去考勤"}}</view>
+</view> -->
+
+<view class="button_container" bindtap="collectInfo" wx:if="{{isFirst}}">
+    <view class="button_info">首次使用</view>
+</view>
+<view class="button_container" wx:if="{{adSuccess}}">
+    <view class="button_info">考勤成功{{adTime}}</view>
+</view>
+<view class="button_container" wx:if="{{outSuccess}}">
+    <view class="button_info">签退成功{{adTime}}</view>
+</view>
+<view class="button_container" bindtap="goToAd" wx:if="{{goAd}}">
+    <view class="button_info">去考勤</view>
+</view>
+<view class="button_container" bindtap="goToOutAd" wx:if="{{goOut}}">
+    <view class="button_info">去签退</view>
+</view>
+
+
+
+
+<view class="tip_info" wx:if="{{isFirst}}">
+    <icon type="info"></icon>请先上传人脸信息
+</view>
+<view class="tip_info" wx:else>
+    <image src="../../static/img/wxb定位.png" style="width: 40rpx;height: 40rpx;"></image>{{address}}
+</view>

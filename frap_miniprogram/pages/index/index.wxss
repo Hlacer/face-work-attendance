@@ -1,0 +1,31 @@
+.map {
+  width: 100%;
+  height: 400rpx;
+  margin-bottom: 30rpx;
+}
+
+.button_container {
+  width: 200rpx;
+  height: 200rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 7px solid #07C160;
+  border-radius: 50%;
+  margin: auto;
+  font-size: 20px;
+}
+.button_info{
+  font-size: 15px;
+  text-align: center;
+}
+
+.tip_info {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+  justify-content: center;
+  margin-top: 20rpx;
+}
