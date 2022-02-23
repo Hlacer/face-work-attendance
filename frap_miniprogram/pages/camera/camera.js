@@ -165,7 +165,7 @@ Page({
                 success() {
                   setTimeout(() => {
                     wx.redirectTo({
-                      url: `/pages/index/index?ad_code=${data.code}&ad_time=${data.ad_time}`,
+                      url: `/pages/index/index`,
                     })
                   }, 500)
                 }
@@ -205,7 +205,7 @@ Page({
                 success() {
                   setTimeout(() => {
                     wx.redirectTo({
-                      url: `/pages/index/index?out_code=${data.code}&out_time=${data.out_time}`,
+                      url: `/pages/index/index`,
                     })
                   }, 500)
                 }

@@ -18,46 +18,14 @@ Page({
 
   onLoad: function (options) {
     this.setTitle()
+  },
+  onShow(){
+    this.checkLocation()
     setTimeout(()=>{
       this.setData({
         isFirst: wx.getStorageSync('isFirst')
       })
-    },500)
-    // if (!this.data.isFirst) {
-    //   time.getHours() >= 0 && time.getHours() < 13 ? this.setData({
-    //     goAd: true
-    //   }) : this.setData({
-    //     goAd: false
-    //   })
-    //   time.getHours() > 13 && time.getHours() < 23 ? this.setData({
-    //     goOut: true
-    //   }) : this.setData({
-    //     goOut: false
-    //   })
-    // }
-    // if (options.ad_code) {
-    //   this.setData({
-    //     adSuccess: options.ad_code,
-    //     adTime: options.ad_time,
-    //     isFirst: false,
-    //     goAd: false,
-    //     goOut: false,
-    //     outSuccess:false
-    //   })
-    // }
-    // if(options.out_code){
-    //   this.setData({
-    //     outSuccess:options.out_code,
-    //     adTime: options.out_time,
-    //     isFirst: false,
-    //     goAd: false,
-    //     goOut: false,
-    //     adSuccess: false
-    //   })
-    // }
-  },
-  onShow(){
-    this.checkLocation()
+    },1000)  
     this.isAttendance()
   },
   //设置页面标题
@@ -80,8 +48,7 @@ Page({
   //今日是否考勤
   isAttendance(){
     const that = this
-    // const hour = time.getHours()
-    const hour = 15
+    const hour = time.getHours()
     wx.showLoading({
       title: '加载中',
     })
@@ -94,7 +61,6 @@ Page({
           date:utils.formDate(new Date)
         },
         success(res){
-          wx.hideLoading()
           if(res.data.isAd===true){
             if(hour>=0 && hour<13){
               that.setData({
@@ -124,8 +90,9 @@ Page({
               }
             }
           }else{
-            if(that.data.isFirst){
+            if(that.data.isFirst===true){
               that.setData({
+                isFirst:true,
                 adSuccess: false,
                 outSuccess:false,
                 goAd: false,
@@ -151,6 +118,7 @@ Page({
           }
         }
       })
+      wx.hideLoading()
     },1000)
   },
   //检测是否获得定位权限
