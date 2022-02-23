@@ -32,7 +32,7 @@ class RenderCsv(CSVRenderer):
         ('attendance_time', '签到时间'),
         ('attendance_out_time', '签退时间'),
         ('attendance_state', '状态'),
-        ('late','是否迟到'),
+        ('late', '是否迟到'),
         ('early_out', '是否早退')
     ])
     encoding = 'utf-8-sig'
@@ -45,9 +45,11 @@ class UserAdOneTimeTable(APIView):
         ad_late = 0
         ad_early_out = 0
         for user_id in all_user:
-            ad_success += UserAttendance.objects.filter(user_id__user_id=user_id,attendance_date=start_time).count()
-            ad_late += UserAttendance.objects.filter(user_id__user_id=user_id,late=True,attendance_date=start_time).count()
-            ad_early_out += UserAttendance.objects.filter(user_id__user_id=user_id,early_out=True,attendance_date=start_time).count()
+            ad_success += UserAttendance.objects.filter(user_id__user_id=user_id, attendance_date=start_time).count()
+            ad_late += UserAttendance.objects.filter(user_id__user_id=user_id, late=True,
+                                                     attendance_date=start_time).count()
+            ad_early_out += UserAttendance.objects.filter(user_id__user_id=user_id, early_out=True,
+                                                          attendance_date=start_time).count()
         ad_unattend = UserModel.UserInfo.objects.all().count() - ad_success
         data = [
             {'type': '出勤', 'value': ad_success},
@@ -72,9 +74,11 @@ class UserAdTwoTimeTable(APIView):
         ad_early_out = 0
         for user_id in all_user:
             for date in date_list:
-                ad_success += UserAttendance.objects.filter(user_id__user_id=user_id,attendance_date=date).count()
-                ad_late += UserAttendance.objects.filter(user_id__user_id=user_id,late=True,attendance_date=date).count()
-                ad_early_out += UserAttendance.objects.filter(user_id__user_id=user_id,early_out=True,attendance_date=date).count()
+                ad_success += UserAttendance.objects.filter(user_id__user_id=user_id, attendance_date=date).count()
+                ad_late += UserAttendance.objects.filter(user_id__user_id=user_id, late=True,
+                                                         attendance_date=date).count()
+                ad_early_out += UserAttendance.objects.filter(user_id__user_id=user_id, early_out=True,
+                                                              attendance_date=date).count()
         ad_unattend = len(date_list) * UserModel.UserInfo.objects.all().count() - ad_success
         data = [
             {'type': '出勤', 'value': ad_success},
@@ -140,11 +144,12 @@ class DeptAdTable(APIView):
         for day in range(1, range_time.days + 1):
             date_list.append((time1 + datetime.timedelta(day)).strftime('%Y-%m-%d'))
         for date in date_list:
-            attend = UserAttendance.objects.filter(user_id__user_dept=department,attendance_date=date).count()
-            late = UserAttendance.objects.filter(user_id__user_dept=department,late=True,attendance_date=date).count()
+            attend = UserAttendance.objects.filter(user_id__user_dept=department, attendance_date=date).count()
+            late = UserAttendance.objects.filter(user_id__user_dept=department, late=True, attendance_date=date).count()
             # un_attend = UserAttendance.objects.filter(attendance_state="缺勤", user_id__user_dept=department,
             #                                           attendance_date=date).count()
-            out_early = UserAttendance.objects.filter(user_id__user_dept=department,early_out=True,attendance_date=date).count()
+            out_early = UserAttendance.objects.filter(user_id__user_dept=department, early_out=True,
+                                                      attendance_date=date).count()
             un_attend = UserModel.UserInfo.objects.all().count() - attend
             data.append({'date': date, 'value': attend, 'type': '出勤'})
             data.append({'date': date, 'value': late, 'type': '迟到'})
@@ -153,7 +158,8 @@ class DeptAdTable(APIView):
             late_count += late
             attend_count += attend
             out_early_count += out_early
-        un_attend_count = len(date_list)*UserModel.UserInfo.objects.filter(user_dept=department).count() - attend_count
+        un_attend_count = len(date_list) * UserModel.UserInfo.objects.filter(
+            user_dept=department).count() - attend_count
         count_data = [{'type': '出勤', 'value': attend_count},
                       {'type': '迟到', 'value': late_count},
                       {'type': '缺勤', 'value': un_attend_count},
@@ -243,6 +249,7 @@ class AttendanceUser(APIView):
         self.FACE_CASCADE = cv.CascadeClassifier('static/cascades/haarcascade_frontalface_default.xml')
         self.FACE_MODELS = cv.face.LBPHFaceRecognizer_create()
 
+    # 待处理迟到和早退，目前为前端处理
     def get(self, request):
         user_attendance = UserAttendance.objects.all().order_by('-attendance_date')
         s = UserAttendanceSerializers(instance=user_attendance, many=True)
@@ -254,7 +261,7 @@ class AttendanceUser(APIView):
         return Response(data, HTTP_200_OK)
 
     def post(self, request):
-        type = request.data['type']
+        ad_user = UserModel.UserInfo.objects.get(wechat_openid=request.data['open_id']).user_id
         id_list = []
         for dirname, son_dirname, filenames in os.walk("static/face_data"):
             for user_dirname in son_dirname:
@@ -278,18 +285,23 @@ class AttendanceUser(APIView):
                 dst = calhe.apply(roi_face)
                 # 二值化
                 retval, erzhihua_face = cv.threshold(dst, 0, 255, cv.THRESH_BINARY + cv.THRESH_OTSU)'''
+                calhe = cv.createCLAHE(clipLimit=1.5, tileGridSize=(4, 4))
+                dst = calhe.apply(roi_face)
+                blur = cv.medianBlur(dst, 5)
                 # 识别
-                label, confidence = self.FACE_MODELS.predict(roi_face)
-                if confidence > 80:
-                    print({"name": "陌生人", 'con': confidence, "id": id_list[label]})
+                label, confidence = self.FACE_MODELS.predict(blur)
+                print('标签id:', label, '置信评分:', confidence, '姓名:', id_list[label])
+
+                if label == -1:
+                    print('未识别','标签id:', label, '置信评分:', confidence, '工号:', id_list[label])
                     return Response({'message': '未识别，请重试'})
-                else:
-                    print('标签id:', label, '置信评分:', confidence, '姓名:', id_list[label])
+                elif ad_user == id_list[label]:
+                    print('标签id:', label, '置信评分:', confidence, '工号:', id_list[label])
                     user = UserModel.UserInfo.objects.get(user_id=id_list[label])
                     ad_time = AttendanceTime.objects.all().first().attendance_time
                     out_time = AttendanceTime.objects.all().first().out_time
                     now_time = datetime.datetime.now().strftime('%H:%M:%S')
-                    if type == '考勤':
+                    if request.data['type'] == '考勤':
                         if now_time > ad_time:
                             attendance_state = '迟到'
                             late = True
@@ -302,7 +314,7 @@ class AttendanceUser(APIView):
                             'attendance_time': now_time,
                             'attendance_date': datetime.date.today(),
                             'attendance_state': attendance_state,
-                            'late':late,
+                            'late': late,
                             'attendance_out_time': '00:00:00'
                         }
                         s = UserAttendanceSerializers(data=data)
@@ -312,7 +324,7 @@ class AttendanceUser(APIView):
                         else:
                             print(s.errors)
                             return Response({'message': '出现错误，请重试', 'code': False, 'err_message': s.errors})
-                    if type == '签退':
+                    if request.data['type'] == '签退':
                         if now_time > out_time:
                             attendance_state = '成功'
                             early_out = False
@@ -322,7 +334,7 @@ class AttendanceUser(APIView):
                         data = {
                             'attendance_state': attendance_state,
                             'attendance_out_time': now_time,
-                            'early_out':early_out
+                            'early_out': early_out
                         }
                         user_ad = UserAttendance.objects.get(user_id=user.user_id)
                         s = UserAttendanceSerializers(instance=user_ad, data=data, partial=True)
@@ -332,16 +344,74 @@ class AttendanceUser(APIView):
                         else:
                             print(s.errors)
                             return Response({'message': '出现错误，请重试', 'code': False, 'err_message': s.errors})
+                else:
+                    print(f'不是本人，应是{ad_user}','标签id:', label, '置信评分:', confidence, '工号:', id_list[label])
+                    return Response({'message': '不是本人'})
+                '''if confidence > 65:
+                    print({"name": "陌生人", 'con': confidence, "id": id_list[label]})
+                    return Response({'message': '未识别，请重试'})
+                else:
+                    print('标签id:', label, '置信评分:', confidence, '姓名:', id_list[label])
+                    user = UserModel.UserInfo.objects.get(user_id=id_list[label])
+                    ad_time = AttendanceTime.objects.all().first().attendance_time
+                    out_time = AttendanceTime.objects.all().first().out_time
+                    now_time = datetime.datetime.now().strftime('%H:%M:%S')
+                    if request.data['type'] == '考勤':
+                        if now_time > ad_time:
+                            attendance_state = '迟到'
+                            late = True
+                        else:
+                            attendance_state = '成功'
+                            late = False
+                        data = {
+                            'user_id': user.user_id,
+                            'user_name': user.user_name,
+                            'attendance_time': now_time,
+                            'attendance_date': datetime.date.today(),
+                            'attendance_state': attendance_state,
+                            'late': late,
+                            'attendance_out_time': '00:00:00'
+                        }
+                        s = UserAttendanceSerializers(data=data)
+                        if s.is_valid():
+                            s.save()
+                            return Response({'message': '考勤成功', 'ad_time': now_time, 'code': True})
+                        else:
+                            print(s.errors)
+                            return Response({'message': '出现错误，请重试', 'code': False, 'err_message': s.errors})
+                    if request.data['type'] == '签退':
+                        if now_time > out_time:
+                            attendance_state = '成功'
+                            early_out = False
+                        else:
+                            attendance_state = '早退'
+                            early_out = True
+                        data = {
+                            'attendance_state': attendance_state,
+                            'attendance_out_time': now_time,
+                            'early_out': early_out
+                        }
+                        user_ad = UserAttendance.objects.get(user_id=user.user_id)
+                        s = UserAttendanceSerializers(instance=user_ad, data=data, partial=True)
+                        if s.is_valid():
+                            s.save()
+                            return Response({'message': '签退成功', 'out_time': now_time, 'code': True})
+                        else:
+                            print(s.errors)
+                            return Response({'message': '出现错误，请重试', 'code': False, 'err_message': s.errors})'''
         else:
             return Response({'message': '未检测到人脸', 'code': False})
 
     def put(self, request):
         wx_openid = request.data['openid']
         date = request.data['date']
-        user_id = UserModel.UserInfo.objects.get(wechat_openid=wx_openid).user_id
-        ad = UserAttendance.objects.filter(user_id=user_id,attendance_date=date)
-        if len(ad)==1:
-            s = UserAttendanceSerializers(instance=ad,many=True)
-            return Response({'isAd':True,'data':s.data})
-        else:
-            return Response({'isAd':False})
+        try:
+            user_id = UserModel.UserInfo.objects.get(wechat_openid=wx_openid).user_id
+            ad = UserAttendance.objects.filter(user_id=user_id, attendance_date=date)
+            if len(ad) == 1:
+                s = UserAttendanceSerializers(instance=ad, many=True)
+                return Response({'isAd': True, 'data': s.data})
+            else:
+                return Response({'isAd': False})
+        except UserModel.UserInfo.DoesNotExist:
+            return Response({'isAd': False})

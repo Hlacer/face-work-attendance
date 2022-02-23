@@ -156,7 +156,8 @@ Page({
           filePath: res.tempImagePath,
           name: 'face_img',
           formData: {
-            type: '考勤'
+            type: '考勤',
+            open_id:wx.getStorageSync('open_id')
           },
           url: 'http://192.168.0.114:8000/attendance/face/',
           success(res) {
@@ -196,7 +197,8 @@ Page({
           filePath: res.tempImagePath,
           name: 'face_img',
           formData: {
-            type: '签退'
+            type: '签退',
+            open_id:wx.getStorageSync('open_id')
           },
           url: 'http://192.168.0.114:8000/attendance/face/',
           success(res) {

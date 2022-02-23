@@ -100,7 +100,6 @@ class User(APIView):
             return Response({'message': "员工不存在，请重试"}, status=HTTP_401_UNAUTHORIZED)
 
 
-
 class OpenId(APIView):
     def post(self, request):
         appid = 'wxda5d7576900652f8'
@@ -162,13 +161,16 @@ class Face(APIView):
                         dst = calhe.apply(gary_face)
                         # 二值化
                         retval, erzhihua_face = cv.threshold(dst, 0, 255, cv.THRESH_BINARY + cv.THRESH_OTSU)'''
+                    calhe = cv.createCLAHE(clipLimit=1.5, tileGridSize=(4, 4))
+                    dst = calhe.apply(gary_face)
+                    blur = cv.medianBlur(dst, 5)
                     # 准备训练
-                    img_array.append(gary_face)
+                    img_array.append(blur)
                     label_array.append(img_label)
                 img_label += 1
         img_array = np.asarray(img_array, np.uint8)
         label_array = np.asarray(label_array, np.int32)
-        LBPH_TRAIN = cv.face.LBPHFaceRecognizer_create()
+        LBPH_TRAIN = cv.face.LBPHFaceRecognizer_create(threshold=60)
         LBPH_TRAIN.train(img_array, label_array)
         LBPH_TRAIN.save("static/cascades/face_models.yml")
         return Response({'code': True})
@@ -201,7 +203,7 @@ class Face(APIView):
         if len(face) == 1:
             for x, y, w, h in face:
                 roi = face_img[y:y + h, x:x + w]
-                roi_face = cv.resize(roi, (128, 128))
+                roi_face = cv.resize(roi, (200, 200))
                 flip_face = cv.flip(roi_face, 1)
                 cv.imwrite(OUT_PATH + FILE_NAME + FILE_TYPE, roi_face)
                 cv.imwrite(OUT_PATH + FILE_NAME + "-flip" + FILE_TYPE, flip_face)

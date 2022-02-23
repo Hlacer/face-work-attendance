@@ -42,7 +42,7 @@
         "ignoreUploadUnusedFiles": true
     },
     "compileType": "miniprogram",
-    "libVersion": "2.22.0",
+    "libVersion": "2.21.4",
     "appid": "wxda5d7576900652f8",
     "projectname": "frap_miniprogram",
     "debugOptions": {
