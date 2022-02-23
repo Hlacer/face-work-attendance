@@ -86,6 +86,9 @@ Page({
   collectFace() {
     const ctx = this.ctx
     const that = this
+    wx.showLoading({
+      title: '请稍后',
+    })
     const timer = setInterval(function () {
       ctx.takePhoto({
         quality: 'high',
@@ -99,6 +102,7 @@ Page({
             },
             url: 'http://192.168.0.114:8000/userinfo/face/',
             success(res) {
+              wx.hideLoading()
               if (JSON.parse(res.data).code === true) {
                 that.setData({
                   isFace: true,
