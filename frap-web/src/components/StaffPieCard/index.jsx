@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Pie} from "@ant-design/charts";
-import {Button, Card, DatePicker, Select, Space,message} from "antd";
+import {Button, Card, DatePicker, Select, Space} from "antd";
 import moment from "moment";
 import "moment/locale/zh-cn"
 import locale from "antd/es/date-picker/locale/zh_CN";
@@ -144,6 +144,8 @@ function Index(){
 						case '早退':
 							color = '#ff9800'
 							break
+						default:
+							color = '#000000'
 					}
 					return (
 						<div  className="manager-count" key={index}>
