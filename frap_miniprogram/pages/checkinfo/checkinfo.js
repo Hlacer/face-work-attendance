@@ -13,7 +13,7 @@ Page({
     checkUser(data){
         const that = this
         wx.request({
-            url: 'http://192.168.0.114:8000/userinfo/openid/',
+            url: 'http://10.197.38.27:8000/userinfo/openid/',
             method: 'PUT',
             header: {
                 'content-type': 'application/x-www-form-urlencoded' // 默认值

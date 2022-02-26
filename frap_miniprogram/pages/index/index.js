@@ -54,7 +54,7 @@ Page({
     })
     setTimeout(()=>{
       wx.request({
-        url: 'http://192.168.0.114:8000/attendance/face/',
+        url: 'http://10.197.38.27:8000/attendance/face/',
         method:'PUT',
         data:{
           openid:wx.getStorageSync('open_id'),
@@ -98,7 +98,7 @@ Page({
                 goAd: false,
                 goOut: false,
               })
-            }else if(hour>=0 && hour<13){
+            }else {
               that.setData({
                 adSuccess:false,
                 adTime:'00:00:00',
@@ -106,15 +106,24 @@ Page({
                 goAd: true,
                 goOut: false,
               })
-            }else{
-              that.setData({
-                adSuccess:false,
-                adTime:'00:00:00',
-                outSuccess:false,
-                goAd: false,
-                goOut: true,
-              })
             }
+            // if(hour>=0 && hour<13){
+            //   that.setData({
+            //     adSuccess:false,
+            //     adTime:'00:00:00',
+            //     outSuccess:false,
+            //     goAd: true,
+            //     goOut: false,
+            //   })
+            // }else{
+            //   that.setData({
+            //     adSuccess:false,
+            //     adTime:'00:00:00',
+            //     outSuccess:false,
+            //     goAd: false,
+            //     goOut: true,
+            //   })
+            // }
           }
         }
       })
@@ -156,7 +165,7 @@ Page({
             })
             //获取数据库中的考勤信息
             wx.request({
-              url: 'http://192.168.0.114:8000/attendance/',
+              url: 'http://10.197.38.27:8000/attendance/',
               method: 'GET',
               success(res) {
                 const coordinate = res.data.attendance_coordinate.split(',')

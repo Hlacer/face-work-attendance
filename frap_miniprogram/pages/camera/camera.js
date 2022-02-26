@@ -42,7 +42,7 @@ Page({
   // 完成采集后训练模型
   train_models() {
     wx.request({
-      url: 'http://192.168.0.114:8000/userinfo/face/',
+      url: 'http://10.197.38.27:8000/userinfo/face/',
       method: "GET",
       success(res) {
         console.log(res.data)
@@ -100,7 +100,7 @@ Page({
               open_id: wx.getStorageSync('open_id'),
               file_name: "face" + that.data.count
             },
-            url: 'http://192.168.0.114:8000/userinfo/face/',
+            url: 'http://10.197.38.27:8000/userinfo/face/',
             success(res) {
               wx.hideLoading()
               if (JSON.parse(res.data).code === true) {
@@ -159,7 +159,7 @@ Page({
             type: '考勤',
             open_id:wx.getStorageSync('open_id')
           },
-          url: 'http://192.168.0.114:8000/attendance/face/',
+          url: 'http://10.197.38.27:8000/attendance/face/',
           success(res) {
             const data = JSON.parse(res.data)
             if (data.code === true) {
@@ -200,7 +200,7 @@ Page({
             type: '签退',
             open_id:wx.getStorageSync('open_id')
           },
-          url: 'http://192.168.0.114:8000/attendance/face/',
+          url: 'http://10.197.38.27:8000/attendance/face/',
           success(res) {
             const data = JSON.parse(res.data)
             if (data.code === true) {

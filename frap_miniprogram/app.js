@@ -13,7 +13,7 @@ App({
         if (res.code) {
           //发起网络请求
           wx.request({
-            url: 'http://192.168.0.114:8000/userinfo/openid/',
+            url: 'http://10.197.38.27:8000/userinfo/openid/',
             method: 'POST',
             header: {
               'content-type': 'application/x-www-form-urlencoded' // 默认值
@@ -49,7 +49,7 @@ App({
   },
   checkFirst(){
     wx.request({
-      url: 'http://192.168.0.114:8000/userinfo/check/',
+      url: 'http://10.197.38.27:8000/userinfo/check/',
       method:'POST',
       data:{
         open_id:wx.getStorageSync('open_id')

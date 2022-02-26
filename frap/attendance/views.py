@@ -290,10 +290,8 @@ class AttendanceUser(APIView):
                 blur = cv.medianBlur(dst, 5)
                 # 识别
                 label, confidence = self.FACE_MODELS.predict(blur)
-                print('标签id:', label, '置信评分:', confidence, '姓名:', id_list[label])
-
                 if label == -1:
-                    print('未识别','标签id:', label, '置信评分:', confidence, '工号:', id_list[label])
+                    print('未识别', '标签id:', label, '置信评分:', confidence, '工号:', id_list[label])
                     return Response({'message': '未识别，请重试'})
                 elif ad_user == id_list[label]:
                     print('标签id:', label, '置信评分:', confidence, '工号:', id_list[label])
@@ -302,18 +300,13 @@ class AttendanceUser(APIView):
                     out_time = AttendanceTime.objects.all().first().out_time
                     now_time = datetime.datetime.now().strftime('%H:%M:%S')
                     if request.data['type'] == '考勤':
-                        if now_time > ad_time:
-                            attendance_state = '迟到'
-                            late = True
-                        else:
-                            attendance_state = '成功'
-                            late = False
+                        late = True if now_time > ad_time else False
                         data = {
                             'user_id': user.user_id,
                             'user_name': user.user_name,
                             'attendance_time': now_time,
                             'attendance_date': datetime.date.today(),
-                            'attendance_state': attendance_state,
+                            'attendance_state': '成功',
                             'late': late,
                             'attendance_out_time': '00:00:00'
                         }
@@ -325,18 +318,13 @@ class AttendanceUser(APIView):
                             print(s.errors)
                             return Response({'message': '出现错误，请重试', 'code': False, 'err_message': s.errors})
                     if request.data['type'] == '签退':
-                        if now_time > out_time:
-                            attendance_state = '成功'
-                            early_out = False
-                        else:
-                            attendance_state = '早退'
-                            early_out = True
+                        early_out = False if now_time > out_time else True
                         data = {
-                            'attendance_state': attendance_state,
+                            'attendance_state': '成功',
                             'attendance_out_time': now_time,
                             'early_out': early_out
                         }
-                        user_ad = UserAttendance.objects.get(user_id=user.user_id)
+                        user_ad = UserAttendance.objects.get(user_id=user.user_id,attendance_date=datetime.date.today())
                         s = UserAttendanceSerializers(instance=user_ad, data=data, partial=True)
                         if s.is_valid():
                             s.save()
@@ -345,7 +333,7 @@ class AttendanceUser(APIView):
                             print(s.errors)
                             return Response({'message': '出现错误，请重试', 'code': False, 'err_message': s.errors})
                 else:
-                    print(f'不是本人，应是{ad_user}','标签id:', label, '置信评分:', confidence, '工号:', id_list[label])
+                    print(f'不是本人，应是{ad_user}', '标签id:', label, '置信评分:', confidence, '工号:', id_list[label])
                     return Response({'message': '不是本人'})
                 '''if confidence > 65:
                     print({"name": "陌生人", 'con': confidence, "id": id_list[label]})
