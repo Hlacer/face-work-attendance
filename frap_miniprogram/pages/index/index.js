@@ -107,23 +107,6 @@ Page({
                 goOut: false,
               })
             }
-            // if(hour>=0 && hour<13){
-            //   that.setData({
-            //     adSuccess:false,
-            //     adTime:'00:00:00',
-            //     outSuccess:false,
-            //     goAd: true,
-            //     goOut: false,
-            //   })
-            // }else{
-            //   that.setData({
-            //     adSuccess:false,
-            //     adTime:'00:00:00',
-            //     outSuccess:false,
-            //     goAd: false,
-            //     goOut: true,
-            //   })
-            // }
           }
         }
       })
