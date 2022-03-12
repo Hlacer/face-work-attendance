@@ -65,16 +65,16 @@ Page({
             if(hour>=0 && hour<13){
               that.setData({
                 outSuccess:false,
-                adTime:res.data.data[0].attendance_time,
+                adTime:res.data.data.attendance_time,
                 adSuccess:true,
                 goAd: false,
                 goOut: false,
               })
             }else{
-              if(res.data.data[0].attendance_out_time!=="00:00:00"){
+              if(res.data.data.attendance_out_time!=="00:00:00"){
                 that.setData({
                   adSuccess:false,
-                  adTime:res.data.data[0].attendance_out_time,
+                  adTime:res.data.data.attendance_out_time,
                   outSuccess:true,
                   goAd: false,
                   goOut: false,
@@ -82,7 +82,7 @@ Page({
               }else{
                 that.setData({
                   adSuccess:false,
-                  adTime:res.data.data[0].attendance_out_time,
+                  adTime:res.data.data.attendance_out_time,
                   outSuccess:false,
                   goAd: false,
                   goOut: true,

@@ -394,12 +394,19 @@ class AttendanceUser(APIView):
         wx_openid = request.data['openid']
         date = request.data['date']
         try:
-            user_id = UserModel.UserInfo.objects.get(wechat_openid=wx_openid).user_id
-            ad = UserAttendance.objects.filter(user_id=user_id, attendance_date=date)
-            if len(ad) == 1:
-                s = UserAttendanceSerializers(instance=ad, many=True)
-                return Response({'isAd': True, 'data': s.data})
-            else:
-                return Response({'isAd': False})
-        except UserModel.UserInfo.DoesNotExist:
+            ad = UserAttendance.objects.get(user_id__wechat_openid=wx_openid,attendance_date=date)
+            s = UserAttendanceSerializers(instance=ad)
+            return Response({'isAd': True, 'data': s.data})
+        except UserAttendance.DoesNotExist:
             return Response({'isAd': False})
+
+        # try:
+        #     user_id = UserModel.UserInfo.objects.get(wechat_openid=wx_openid).user_id
+        #     ad = UserAttendance.objects.filter(user_id=user_id, attendance_date=date)
+        #     if len(ad) == 1:
+        #         s = UserAttendanceSerializers(instance=ad, many=True)
+        #         return Response({'isAd': True, 'data': s.data})
+        #     else:
+        #         return Response({'isAd': False})
+        # except UserModel.UserInfo.DoesNotExist:
+        #     return Response({'isAd': False})
