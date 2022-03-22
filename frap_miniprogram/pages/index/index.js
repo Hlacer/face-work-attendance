@@ -54,7 +54,7 @@ Page({
     })
     setTimeout(()=>{
       wx.request({
-        url: 'http://10.197.38.27:8000/attendance/face/',
+        url: 'http://10.197.48.99:8000/attendance/face/',
         method:'PUT',
         data:{
           openid:wx.getStorageSync('open_id'),
@@ -148,7 +148,7 @@ Page({
             })
             //获取数据库中的考勤信息
             wx.request({
-              url: 'http://10.197.38.27:8000/attendance/',
+              url: 'http://10.197.48.99:8000/attendance/',
               method: 'GET',
               success(res) {
                 const coordinate = res.data.attendance_coordinate.split(',')

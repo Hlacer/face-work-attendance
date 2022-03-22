@@ -92,7 +92,7 @@ function Index(props) {
 	}
 	return (
 		<>
-			<div style={{fontSize:'24px',marginBottom:'10px'}}>考勤设置</div>
+			<div style={{fontSize:'24px',marginBottom:'10px',textAlign:"left"}}>考勤设置</div>
 			<Card>
 				<Row gutter={18}>
 					<Col span={10}>
