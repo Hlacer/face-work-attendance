@@ -62,7 +62,7 @@ Page({
         },
         success(res){
           if(res.data.isAd===true){
-            if(hour>=0 && hour<13){
+            if(hour>=0 && hour<12){
               that.setData({
                 outSuccess:false,
                 adTime:res.data.data.attendance_time,
@@ -138,13 +138,18 @@ Page({
       key: 'ed3f8f1e8b4349b2d815ff66b90e5304'
     })
     wx.getLocation({
-      success() {
+      type:'gcj02',
+      success(data) {
+        const loc = data.longitude+','+data.latitude
+        that.setData({
+          latitude: data.latitude,
+          longitude: data.longitude
+        })
         AMap.getRegeo({
+          location:loc,
           success(data) {
             that.setData({
-              address: data[0].name,
-              latitude: data[0].latitude,
-              longitude: data[0].longitude
+              address: data[0].desc
             })
             //获取数据库中的考勤信息
             wx.request({
@@ -153,7 +158,7 @@ Page({
               success(res) {
                 const coordinate = res.data.attendance_coordinate.split(',')
                 const distance = that.Distance(coordinate[1], coordinate[0], that.data.latitude, that.data.longitude)
-                if (distance < 50) {
+                if (distance < 0.5) {
                   that.setData({
                     inAdPlace: true
                   })
